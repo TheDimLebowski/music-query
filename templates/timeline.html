@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var values = {{ values|safe }}
+        var names = [{{ names|safe }}]
+        data_to_plot = names.concat(values)
+        console.log(data_to_plot)
+        var data = google.visualization.arrayToDataTable(data_to_plot);
+
+        var options = { 'title': 'Volume of releases per musical genre in {{ country }} as a function of time.',
+                        'width':1000,
+                        'height':500
+                      };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1><a href="{{ request.url_root }}"> MusicQuery </a></h1>
+    <br>
+
+    <form action="/timeline" method="get">
+      Country: <input name="country" value = '{{country}}'></input>
+      <br>
+      <input type="submit" value="Plot!"></input>
+    </form>
+
+    <!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+
+  </body>
+</html>
